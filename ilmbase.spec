@@ -6,7 +6,7 @@
 #
 Name     : ilmbase
 Version  : 2.3.0
-Release  : 3
+Release  : 4
 URL      : https://github.com/openexr/openexr/releases/download/v2.3.0/ilmbase-2.3.0.tar.gz
 Source0  : https://github.com/openexr/openexr/releases/download/v2.3.0/ilmbase-2.3.0.tar.gz
 Source99 : https://github.com/openexr/openexr/releases/download/v2.3.0/ilmbase-2.3.0.tar.gz.sig
