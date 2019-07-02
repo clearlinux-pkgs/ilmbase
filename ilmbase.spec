@@ -6,7 +6,7 @@
 #
 Name     : ilmbase
 Version  : 2.3.0
-Release  : 4
+Release  : 5
 URL      : https://github.com/openexr/openexr/releases/download/v2.3.0/ilmbase-2.3.0.tar.gz
 Source0  : https://github.com/openexr/openexr/releases/download/v2.3.0/ilmbase-2.3.0.tar.gz
 Source99 : https://github.com/openexr/openexr/releases/download/v2.3.0/ilmbase-2.3.0.tar.gz.sig
@@ -16,6 +16,7 @@ License  : BSD-3-Clause
 Requires: ilmbase-lib = %{version}-%{release}
 Requires: ilmbase-license = %{version}-%{release}
 BuildRequires : buildreq-cmake
+Patch1: CVE-2018-18443.patch
 
 %description
 The IlmBase Libraries
@@ -27,6 +28,7 @@ Summary: dev components for the ilmbase package.
 Group: Development
 Requires: ilmbase-lib = %{version}-%{release}
 Provides: ilmbase-devel = %{version}-%{release}
+Requires: ilmbase = %{version}-%{release}
 
 %description dev
 dev components for the ilmbase package.
@@ -51,25 +53,31 @@ license components for the ilmbase package.
 
 %prep
 %setup -q -n ilmbase-2.3.0
+%patch1 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1549585786
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1562091185
+export GCC_IGNORE_WERROR=1
+export CFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
+export FCFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
+export FFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
+export CXXFLAGS="$CXXFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
 %configure --disable-static
 make  %{?_smp_mflags}
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1549585786
+export SOURCE_DATE_EPOCH=1562091185
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/ilmbase
 cp LICENSE %{buildroot}/usr/share/package-licenses/ilmbase/LICENSE
